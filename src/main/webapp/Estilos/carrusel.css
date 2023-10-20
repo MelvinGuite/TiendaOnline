@@ -1,0 +1,53 @@
+
+.carousel-container {
+    width: 80%;
+    margin: 0 auto;
+    text-align: right; /* Cambia la alineación de texto a la derecha para el carrusel */
+}
+
+.carousel {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    text-align: right; /* Restablece la alineación de texto a la izquierda dentro del carrusel */
+}
+
+.carousel li {
+    display: none;
+}
+
+.carousel img {
+    max-width: 15%;
+    height: auto;
+}
+
+button {
+    margin-top: 10px;
+}
+
+.carousel-container {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.carousel {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+.carousel li {
+    display: none;
+}
+
+.carousel img {
+    max-width: 15%;
+    height: auto;
+}
+
+button {
+    margin-top: 10px;
+}

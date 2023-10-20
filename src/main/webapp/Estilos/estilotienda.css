@@ -1,0 +1,99 @@
+
+/* Estilos generales */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    position: relative;
+    background-color: #f5f5f5;
+    background-image: url('');
+    background-size: cover;
+    background-position: center;
+    background-repeat: repeat;
+    flex-direction: column; /* Cambiamos la dirección del flujo de contenido a columna */
+}
+
+
+/* Estilo del menú horizontal */
+.navbar {
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    align-items: center;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    margin-right: 20px;
+    transition: color 0.3s;
+}
+
+.navbar a:hover {
+    color: #00bcd4;
+}
+
+/* Estilos de las tarjetas */
+.content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start; /* Alineamos las tarjetas en la parte superior */
+}
+
+/* Estilos de las tarjetas adaptados */
+.card {
+    width: calc(25% - 20px);
+    background: linear-gradient(to bottom right, #00bcd4, #007c91);
+    background: rgba(0, 105, 235, 1);
+    color: #FFFF;
+    border-radius: 5px;
+    padding: 20px;
+    margin-right: 10px; /* Agregar un margen derecho para separar las tarjetas horizontalmente */
+    margin-bottom: 10px; /* Opcional: agregar un margen inferior para separar las tarjetas verticalmente */
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s, opacity 0.3s;
+    cursor: pointer;
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    opacity: 1;
+}
+
+
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    opacity: 1; /* Reducimos la opacidad al pasar el cursor sobre la tarjeta */
+}
+.card h2 {
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+/* Imágenes de las tarjetas */
+.card img {
+    width: 100%;
+    height: 200px; /* Tamaño uniforme de las imágenes */
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+body::before {
+    content: "";
+    background-image: url(''); /* Ruta de la imagen de fondo */
+    filter: blur(10px); /* Ajusta el valor de blur según lo desees */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Coloca la capa detrás del contenido */
+    opacity: 0.7; /* Ajusta la opacidad según tu preferencia */
+}

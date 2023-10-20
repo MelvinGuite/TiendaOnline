@@ -1,0 +1,13 @@
+#miDiv img {
+    position: absolute;
+    top: 40px;
+    left: 10px;
+    z-index: 1;
+    width: 70%;
+    height: 20%;
+    overflow: hidden;
+}
+
+#miDiv {
+    background: transparent;
+}

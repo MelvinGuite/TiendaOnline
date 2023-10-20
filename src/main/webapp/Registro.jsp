@@ -60,7 +60,9 @@ label {
 
 input[type="text"],
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+input[type="number"]
+ {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -102,6 +104,12 @@ input[type="submit"]:hover {
 
             <label for="email">Correo Electrónico:</label>
             <input type="email" id="email" name="email" required>
+            
+            <label for="email">Telefono:</label>
+            <input type="number" id="telefono" name="telefono" required>
+            
+            <label for="name">Direccion de entrega:</label>
+            <input type="text" id="direccion" name="direccion" required>
 
             <label for="password">Contraseña:</label>
             <input type="password" id="password" name="password" required>

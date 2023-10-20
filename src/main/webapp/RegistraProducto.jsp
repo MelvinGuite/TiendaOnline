@@ -103,6 +103,7 @@
 <body>
     <h1>Registro de Producto</h1>
     <h2>${exito}</h2>
+    <h2>${error}</h2>
     <form action="Producto" method="POST">
         <label for="nombre_producto">Nombre del Producto:</label>
         <input type="text" id="nombre_producto" name="nombre_producto" required><br><br>

@@ -1,3 +1,4 @@
+<%@page import="java.util.*"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
@@ -112,44 +113,181 @@ body {
 
     </style>
 </head>
+<%
+String usuario = (String) request.getSession().getAttribute("sesion");
+if(usuario == null) {
+	usuario = "No ha iniciado sesion";
+	response.sendRedirect("Tienda.jsp");
+}
+%>
 
 <body>
     <div class="navbar">
-        <a href="#">Inicio</a>
-        <a href="#">Productos</a>
-        <a href="#">Carrito</a>
+        <a href="Tienda.jsp">Regresar a Tienda</a>
+        <a href="#">Mis pedidos</a>
     </div>
+<P>En sesion: <%=usuario%> </P>
+
 
     <div class="cart">
+
         <h1>Carrito de Compras</h1>
-        <div class="product">
-            <img src="product1.jpg" alt="Producto 1">
-            <div class="product-info">
-                <h2>Producto 1</h2>
-                <p>Precio: $19.99</p>
-                <p>Cantidad: <input type="number" value="1"></p>
-                <p>Subtotal: $19.99</p>
-                <button class="remove">Eliminar</button>
-            </div>
-        </div>
 
-        <div class="product">
-            <img src="product2.jpg" alt="Producto 2">
-            <div class="product-info">
-                <h2>Producto 2</h2>
-                <p>Precio: $24.99</p>
-                <p>Cantidad: <input type="number" value="1"></p>
-                <p>Subtotal: $24.99</p>
-                <button class="remove">Eliminar</button>
-            </div>
-        </div>
+		<%
+		Object objCarrito = request.getAttribute("carrito");
+		List<String> lsCarrito = null;
+		if (objCarrito != null) {
+			float total = 0.0f; 
+			if (objCarrito instanceof List) {
+				lsCarrito = (List<String>) objCarrito;
+				
+				for (int i = 0; i < lsCarrito.size(); i += 6) {
+					String producto = lsCarrito.get(i);
+					String url = lsCarrito.get(i + 1);
+					String id = lsCarrito.get(i + 2);
+					String cantidad = lsCarrito.get(i + 3);
+					String precio = lsCarrito.get(i + 4);
+					String existencia = lsCarrito.get(i + 5);
+					float subtotal = Float.parseFloat(precio) * Float.parseFloat(cantidad);
+					total += subtotal;
+		%>
+<div class="product">
+<iframe src="<%=url%>" width="250" height="250" id="imagen<%=i%>" name="imagen"></iframe>
+    <div class="product-info">
 
-        <div class="total">
-            <p>Total: $44.98</p>
-        </div>
-
-        <button class="checkout">Realizar Pedido</button>
+        <h2><%=producto%></h2>
+        <P></P>inventario: <%=existencia%>
+        <p>Precio: Q<%=precio%></p>
+        <p>Cantidad: <input type="number" value="<%=cantidad%>" id="cantidadInput<%=i%>" onchange="validarCantidad(this, <%=existencia%>);"></p>
+<p>Subtotal: Q<span id="subtotal<%=i%>"><%=subtotal%></span></p>
+<input id="usuario" name="usuario" value="<%=usuario%>" hidden="">
+<button class="remove" type="submit" onclick="enviarFormulario(<%=i%>)">Eliminar</button>
+       
     </div>
+</div>
+	<div id="resultado"></div>
+
+
+
+
+
+
+<form id="miFormulario<%=i%>" onsubmit="enviarFormulario(event, <%=i%>)">
+</form>
+<script type="text/javascript">
+function enviarFormulario(i) {
+  //  event.preventDefault(); // Evita la recarga de la página
+
+    // Obtén el valor del iframe correspondiente al índice 'i'  y el usuario
+    var iframe = document.getElementById("imagen" + i);
+    var usuario = document.getElementById("usuario");
+    var iframeSrc = iframe.src;
+
+    // Envía el valor al servlet utilizando AJAX (puedes usar fetch o XMLHttpRequest)
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "EliminarProducto", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // Manejar la respuesta del servlet si es necesario
+            document.getElementById("resultado").innerHTML = xhr.responseText;
+        }
+    };
+
+    // Define los datos que deseas enviar al servlet
+    var data = "producto=" + encodeURIComponent(iframeSrc) + "&usuario=<%=usuario%>";
+    xhr.send(data);
+}
+</script>
+
+
+<script>
+//calculo de subtotal 
+<% for (int j = 0; j < lsCarrito.size(); j += 6) { %>
+document.getElementById("cantidadInput<%=j%>").addEventListener("input", function () {
+    var cantidadInput = document.getElementById("cantidadInput<%=j%>");
+    var cantidad = parseFloat(cantidadInput.value);
+    var existencia = parseFloat("<%=lsCarrito.get(j + 5)%>"); // Supongo que el inventario está en la posición 5
+
+    if (cantidad > existencia) {
+        alert("La cantidad no puede ser mayor que el inventario (" + existencia + ")");
+        cantidadInput.value = existencia; // Restablecer la cantidad al valor del inventario
+    } else if (cantidad < 0) {
+        alert("La cantidad no puede ser negativa");
+        cantidadInput.value = 0; // Restablecer la cantidad a cero
+    }
+
+    var precio = parseFloat("<%=lsCarrito.get(j + 4)%>");
+    var subtotal = cantidad * precio;
+    document.getElementById("subtotal<%=j%>").textContent = subtotal.toFixed(2); // Formatea el subtotal a dos decimales
+
+    // Actualizar el total
+    actualizarTotal();
+});
+<% } %>
+
+function actualizarTotal() {
+    var total = 0;
+    <% for (int j = 0; j < lsCarrito.size(); j += 6) { %>
+    var subtotal<%=j%> = parseFloat(document.getElementById("subtotal<%=j%>").textContent);
+    total += subtotal<%=j%>;
+    <% } %>
+    document.getElementById("total").textContent = total.toFixed(2);
+}
+
+// Llamar a actualizarTotal al cargar la página
+actualizarTotal();
+
+</script>
+
+
+
+
+
+
+
+
+
+		<%
+		}
+		%>
+		<%
+		}
+		%>
+        <div class="total">
+        <p>Total: Q<span id="total"><%=total%></span></p>
+		<%}
+		%>
+
+        </div>
+        <button class="checkout">Confirmar Pedido</button>
+    </div>
+
+   
+ <form action="ProductoCarrito" method="get">
+ <input name="correo" id="correo" type="text" value="<%=usuario%>" hidden="">
+ <label>sino ves tus productos, haz clic </label>
+<button type="submit" name="ver" id="ver">aqui</button>
+</form>
+<script type="text/javascript">
+// Verifica si ya se ha realizado la acción
+var clic = localStorage.getItem('cargar') === 'true';
+
+// Espera a que se cargue completamente la página
+window.onload = function() {
+    // Verifica si aún no se ha hecho clic
+    if (!cargar) {
+        // Encuentra el botón por su id
+        var boton = document.getElementById('ver');
+
+        // Simula un clic en el botón
+        boton.click();
+
+        // Marca que se ha hecho clic en el almacenamiento local
+        localStorage.setItem('cargar', 'true');
+    }
+};
+</script>
 </body>
 
 </html>

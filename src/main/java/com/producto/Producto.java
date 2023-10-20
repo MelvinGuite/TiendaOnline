@@ -1,6 +1,7 @@
 package com.producto;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.mysql.Connmysql;
@@ -36,15 +37,18 @@ public class Producto extends HttpServlet {
 			arrProducto.add(7, request.getParameter("id_proveedor"));
 			
 			try {
-				Connmysql conn = new Connmysql();
-				conn.RegistraProducto(arrProducto);
-				conn.cerrarConexion();
-				request.setAttribute("exito", "Su Producto ha sido registrado");
-			} catch (Exception e) {
-				e.printStackTrace();
-				request.setAttribute("exito", "Su Producto ha sido registrado");
-
+			    Connmysql conn = new Connmysql();
+			    conn.RegistraProducto(arrProducto);
+			    conn.cerrarConexion();
+			    request.setAttribute("exito", "Su Producto ha sido registrado");
+			} catch (SQLException e) {
+			    if (e.getSQLState().equals("45000")) {
+			        request.setAttribute("error", "El producto que intentas registrar ya existe");	
+			    } else {
+			        e.printStackTrace();
+			    }
 			}
+
 		}
 		
 		request.getRequestDispatcher("RegistraProducto.jsp").forward(request, response);

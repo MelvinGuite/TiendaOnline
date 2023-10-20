@@ -57,7 +57,8 @@
 
         input[type="text"],
         input[type="email"],
-        input[type="password"] {
+        input[type="number"],
+        input[type="password"] { 
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -103,11 +104,11 @@
         <label for="">Apellido:</label>
         <input type="text" id="apellido" name="apellido" maxlength="50" required><br><br>
 
-        <label for="">Dirección:</label>
+        <label for="">Dirección de entrega:</label>
         <input type="text" id="direccion" name="direccion" maxlength="255" required><br><br>
 
         <label for="">Teléfono:</label>
-        <input type="text" id="telefono" name="telefono" maxlength="15" required><br><br>
+        <input type="number" id="telefono" name="telefono" maxlength="15" required><br><br>
 
         <label for="">Correo Electrónico:</label>
         <input type="email" id="correo" name="correo" maxlength="255" required><br><br>

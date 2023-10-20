@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import com.encriptado.Procesamiento;
 import com.mysql.Connmysql;
 
 import jakarta.servlet.ServletException;
@@ -33,13 +34,15 @@ public class Clientes extends HttpServlet {
                lsDatos.add(request.getParameter("password"));
                try {
             	   Connmysql conn = new Connmysql();
-            	   conn.RegistroCliente(lsDatos);
+            	   Procesamiento pr = new Procesamiento();
+            	   String hash = pr.Encriptar(lsDatos.get(6));
+            	   conn.RegistroCliente(lsDatos, hash);
             	   conn.cerrarConexion();
             	   System.out.println("Cliente Registrado");
-            	   request.setAttribute("exito", "Cliente Registrado con exito");
+            	   request.setAttribute("exito", "Registro exitoso");
                } catch (SQLException e) {
-				if(e.getSQLState().equals("23000")) {
-		            request.setAttribute("error", "Error: El cliente ya está Registrado");
+				if(e.getSQLState().equals("45000")) {
+		            request.setAttribute("error", "Error: Identificacion o correo ya registrados");
 				} else {
 					e.printStackTrace();
 				}
