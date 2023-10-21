@@ -91,6 +91,11 @@
     </style>
 </head>
 <body>
+    <div class="navbar">
+        <a href="Pedidos.jsp">Pedidos</a>
+        
+        <a href="RegistraProducto.jsp">Registrar Producto</a>
+    </div>
 <h1>${exito}</h1>
 <h1>${error}</h1>
     <h1>Registro de Proveedor</h1>

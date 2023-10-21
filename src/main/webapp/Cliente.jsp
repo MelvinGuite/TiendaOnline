@@ -93,7 +93,7 @@
 <body>
 <h1>${exito}</h1>
 <h1>${error}</h1>
-    <h1>Formulario de Datos</h1>
+    <h1>Registrate</h1>
     <form action="Clientes" method="GET">
         <label for="">IDENTIFICACION:</label>
         <input type="text" id="id" name="id" required><br><br>
@@ -122,6 +122,9 @@
         <div class="error" id="password_error"></div>
 
         <input type="submit" value="Registrar" name="registrar" id="registrar" onclick="return validatePassword()">
+       <a href="Tienda.jsp">Regresar a la tienda</a>
+
+        
     </form>
 
     <script>

@@ -43,9 +43,22 @@ if(usuario == null) {
 		
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+// enlace para cerrar sesion
+    $(document).ready(function() {
+        $("#cerrar-sesion").click(function() {
+            // Realizar una solicitud POST al servlet de cierre de sesión
+            $.post("Logout", function() {
+                // Redirigir a la página de inicio de sesión después de cerrar sesión
+                window.location.href = "Tienda.jsp";
+            });
+        });
+    });
+</script>
+
 
 <script>
-// Obtén la variable de usuario desde tu aplicación, asumiendo que ya está disponible
 var usuario = "<%= usuario %>";
 
 // Obtén el elemento del enlace del carrito por su ID
@@ -65,18 +78,7 @@ if (!usuario || usuario === "No ha iniciado sesion") {
 
 
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $("#cerrar-sesion").click(function() {
-            // Realizar una solicitud POST al servlet de cierre de sesión
-            $.post("Logout", function() {
-                // Redirigir a la página de inicio de sesión después de cerrar sesión
-                window.location.href = "Tienda.jsp";
-            });
-        });
-    });
-</script>
+
 <div class="carousel-container" >
         <ul class="carousel">
             <li><iframe src="https://drive.google.com/file/d/1HuUpxrS5VuA5luUw0qJ6KiBczKy4T8Rl/preview" width="250" height="250"></iframe></li>

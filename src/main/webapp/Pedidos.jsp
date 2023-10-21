@@ -105,8 +105,9 @@ button.edit {
 
 <body>
     <div class="navbar">
-        <a href="#">Inicio</a>
-        <a href="#">Pedidos</a>
+        <a href="Proveedor.jsp">Proveedor</a>
+        
+        <a href="RegistraProducto.jsp">Registrar Producto</a>
     </div>
 
     <div class="order-management">
@@ -144,7 +145,7 @@ button.edit {
                     <td>Juan Pérez</td>
                     <td>Calle Principal 123, Ciudad</td>
                     <td>Producto 1, Producto 2</td>
-                    <td>$44.98</td>
+                    <td>Q44.98</td>
                     <td>
                         <select>
                             <option value="activo">Activo</option>
@@ -161,7 +162,7 @@ button.edit {
                     <td>Maria González</td>
                     <td>Avenida Secundaria 456, Ciudad</td>
                     <td>Producto 3, Producto 4</td>
-                    <td>$62.50</td>
+                    <td>Q62.50</td>
                     <td>
                         <select>
                             <option value="activo">Activo</option>
@@ -178,7 +179,7 @@ button.edit {
                     <td>Laura Smith</td>
                     <td>Plaza Principal 789, Ciudad</td>
                     <td>Producto 2, Producto 5</td>
-                    <td>$38.75</td>
+                    <td>Q38.75</td>
                     <td>
                         <select>
                             <option value="activo">Activo</option>
@@ -195,7 +196,7 @@ button.edit {
                     <td>Carlos Rodríguez</td>
                     <td>Avenida Principal 987, Ciudad</td>
                     <td>Producto 1, Producto 3, Producto 6</td>
-                    <td>$77.97</td>
+                    <td>Q77.97</td>
                     <td>
                         <select>
                             <option value="activo">Activo</option>
@@ -206,7 +207,7 @@ button.edit {
                     </td>
                     <td><button class="edit">Editar</button></td>
                 </tr>
-                <!-- Puedes seguir agregando más filas de pedidos aquí -->
+                <!--  -->
             </tbody>
         </table>
     </div>

@@ -118,7 +118,9 @@ input[type="submit"]:hover {
             <input type="password" id="confirm-password" name="confirm-password" required>
 
             <input type="submit" value="Registrarse">
+            
         </form>
+                
     </div>
 </body>
 
