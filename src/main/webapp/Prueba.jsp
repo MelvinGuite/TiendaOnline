@@ -72,7 +72,7 @@ if(usuario == null) {
 	     <%=usuario%>
 	     <a></a><a></a><a></a><a></a><a>${agregado}</a><a></a><a></a><a></a><a></a><a></a><a></a>
 			<input type="search"> <button type="button">Buscar</button>
-			<a id="carritoLink" href="NuevoCarrito.jsp">Ver productos en carrito</a>
+			<a id="carritoLink" href="Carrito.jsp">Ver productos en carrito</a>
 			<a href="" id="cerrar-sesion">Cerrar Sesión</a>
 	    </div>
 	</div>
@@ -167,10 +167,6 @@ if (!usuario || usuario === "No ha iniciado sesion") {
     });
 
     function mostrarDetalles(card) {
-        if ("<%= usuario %>" === null || "<%= usuario %>" == "No ha iniciado sesion" ) {
-            alert("Debe iniciar sesión para agregar productos al carrito.");
-            return;
-        }
         // Obtener el ID del producto desde la tarjeta clicada
         var productoID = $(card).find('.id').text();       
         // Mostrar el ID en un prompt
@@ -183,7 +179,6 @@ if (!usuario || usuario === "No ha iniciado sesion") {
         cantidad = parseInt(cantidad);
         
         if (cantidad > 0 && cantidad <= inventario) {
-        	
             var confirmar = window.confirm("¿Desea agregar " + cantidad + " producto(s) al carrito?");
             
             if (confirmar) {

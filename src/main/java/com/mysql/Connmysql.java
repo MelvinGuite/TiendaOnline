@@ -139,14 +139,28 @@ public class Connmysql {
 	}
 	
 	//eliminar producto de carrito 
-	public void EiminarPCarrito(String url, String correo) throws SQLException {
+	public void EiminarPCarrito(String id, String correo) throws SQLException {
 		CallableStatement cl = conexion.prepareCall(" { call EliminarPCarrito (?, ? ) } ");
-		cl.setString(1, url);
+		cl.setInt(1, Integer.parseInt(id));
 		cl.setString(2, correo);
 		cl.execute();
 	}
 	
+	//actualizar carrito 
+	public void ActualizaCarrito (String usuario, int producto, int cantidad) throws SQLException {
+		CallableStatement cl = conexion.prepareCall(" { call ActualizaCarrito (?, ?, ?) } ");
+		cl.setString(1, usuario);
+		cl.setInt(2, producto);
+		cl.setInt(3, cantidad);
+		cl.execute();
+	}
 	
+	// Crear y confirmar pedido 
+	public void ConfirmaPedido (String correo) throws SQLException {
+		CallableStatement cl = conexion.prepareCall(" { call CreaPedido (?) } ");
+		cl.setString(1, correo);
+		cl.execute();
+	}
 	
 	
 	

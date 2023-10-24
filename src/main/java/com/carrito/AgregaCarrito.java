@@ -23,7 +23,9 @@ public class AgregaCarrito extends HttpServlet {
 		    String id_producto = request.getParameter("id_producto");
 		    String correo_usuario = request.getParameter("usuario");
 		    String cantidad = request.getParameter("cantidad");
-
+		    System.out.println("el id es" + id_producto);
+		    System.out.println("EL correo es: " + correo_usuario);
+		    System.out.println("LA cantidad : " + cantidad);
 		    try {
 		    	Connmysql conn = new Connmysql();
 		    	ResultSet rsCliente = conn.Identificador(correo_usuario);
