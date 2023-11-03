@@ -1,9 +1,10 @@
-package com.carrito;
+package com.pedidos;
 
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import com.google.gson.Gson;
 import com.mysql.Connmysql;
 
 import jakarta.servlet.ServletException;
@@ -12,34 +13,42 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/**
- * Servlet implementation class ProductoCarrito
- */
-@WebServlet("/ProductoCarrito")
-public class ProductoCarrito extends HttpServlet {
-	private static final long serialVersionUID = 1L;
 
+
+/**
+ * Servlet implementation class DetalleADPedido
+ */
+@WebServlet("/DetalleADPedido")
+public class DetalleADPedido extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+ 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String correo = request.getParameter("correo");
-		ArrayList<String> arrCarrito = new ArrayList<String>();
+		String id = request.getParameter("id");
+		ArrayList<String> arrDetalle = new ArrayList<String>();
+		
 		try {
 			Connmysql conn = new Connmysql();
-			ResultSet rsCarrito = conn.ProductoCarrito(correo);
-			while(rsCarrito.next()) {
-				arrCarrito.add(rsCarrito.getString("nombreproducto"));
-				arrCarrito.add(rsCarrito.getString("URL"));
-				arrCarrito.add(rsCarrito.getString("idproducto"));
-				arrCarrito.add(rsCarrito.getString("cantidad"));
-				arrCarrito.add(rsCarrito.getString("precio"));
-				arrCarrito.add(rsCarrito.getString("CantidadInventario"));
-				//paquetes de 6 datos
+			ResultSet rsDetalle = conn.DetalleMisPedidos(id);
+			while(rsDetalle.next()) {
+				arrDetalle.add(rsDetalle.getString("imagen"));
+				arrDetalle.add(rsDetalle.getString("nombreproducto"));
+				arrDetalle.add(rsDetalle.getString("cantidad"));
+				arrDetalle.add(rsDetalle.getString("precio_unitario"));
 			}
-			request.setAttribute("carrito", arrCarrito);
 			conn.cerrarConexion();
-		}catch (Exception e) {
+			
+			Gson gson = new Gson();
+			String json = gson.toJson(arrDetalle);
+			
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			
+			response.getWriter().write(json);
+			System.out.println("Mostrando detalle pedidos");
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		request.getRequestDispatcher("Carrito.jsp").forward(request, response);
 	}
 
 	/**

@@ -14,6 +14,8 @@
 <script src="https://kit.fontawesome.com/be42ec504e.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" type="text/css" href="Estilos/estilotienda.css">
 
+<script src="https://kit.fontawesome.com/be42ec504e.js"></script>
+
 <!-- funciones -->
 <script type="text/javascript" src="Funciones/carrusel.js"></script>
 <script type="text/javascript" src="Funciones/cerrarsesion.js"></script>
@@ -49,6 +51,28 @@
     }
 
 </style>
+
+<style>
+    #paginacion {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    #pagina-anterior, #pagina-siguiente {
+        background-color: #007bff;
+        color: #fff;
+        padding: 5px 10px;
+        margin: 0 5px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    #pagina-anterior:hover, #pagina-siguiente:hover {
+        background-color: #0056b3;
+    }
+</style>
+
 </head>
 <%
 String usuario = (String) request.getSession().getAttribute("sesion");
@@ -63,18 +87,18 @@ if(usuario == null) {
 
 
 	<!-- Agrega el menu -->
-	<div class="navbar">
+	<div class="navbar"> 
 	    <div>
 	        <a href="Cliente.jsp">Registrate</a>
 	        <a href="Login.jsp">Inicio de sesion</a>
+	        <a><%=usuario%></a>
+	        <a id="carritoLink" href="NuevoCarrito.jsp">Ver productos en carrito</a>
+	        <a href="" id="cerrar-sesion">Cerrar Sesión</a>
 	    </div>
-		 <div>
-	     <%=usuario%>
-	     <a></a><a></a><a></a><a></a><a>${agregado}</a><a></a><a></a><a></a><a></a><a></a><a></a>
-			<input type="search"> <button type="button">Buscar</button>
-			<a id="carritoLink" href="NuevoCarrito.jsp">Ver productos en carrito</a>
-			<a href="" id="cerrar-sesion">Cerrar Sesión</a>
-	    </div>
+		 <div>   
+<input type="text" id="busqueda" placeholder="Buscar por nombre de producto" style="width: 300px;">
+	   </div>
+	    
 	</div>
 	
 	
@@ -108,8 +132,9 @@ if (!usuario || usuario === "No ha iniciado sesion") {
         <button id="prevBtn" hidden="true">Anterior</button>
         <button id="nextBtn" hidden="true">Siguiente</button>
     </div>
-    
-    
+
+
+
 <template id="tarjeta-template">
     <div class="card" onclick="mostrarDetalles(this);">
         <iframe src="" width="250" height="250"></iframe>
@@ -122,9 +147,14 @@ if (!usuario || usuario === "No ha iniciado sesion") {
     </div>
 </template>
 
+<div id="paginacion">
+    <button id="pagina-anterior" ><i class="fa-solid fa-left-long fa-fade fa-xl" style="color: #2861c3;"></i></button>
+    <button id="pagina-siguiente"><i class="fa-solid fa-right-long fa-fade fa-xl" style="color: #2861c3;"></i></button>
+</div>
 <div id="contenedor" class="content">
     <!-- Aquí debes tener contenido generado dinámicamente que incluya los productos -->
 </div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -158,8 +188,10 @@ if (!usuario || usuario === "No ha iniciado sesion") {
                     template.find('.producto-disponibles').text(producto.CantidadInventario);
 
                     contenedor.append(template);
-                }
+                }         
             },
+            
+            
             error: function () {
                 console.log('Error en la solicitud');
             }
@@ -221,6 +253,103 @@ if (!usuario || usuario === "No ha iniciado sesion") {
 </script>
 
 		    
+		    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+    	var paginaActual = 1;
+    	var productosPorPagina = 3; // Puedes ajustar este número según tus necesidades
+
+        var productos = [];
+
+        function cargarProductos() {
+            $.ajax({
+                url: 'PruebaProducto',
+                type: 'get',
+                dataType: 'json',
+                success: function (data) {
+                    productos = [];
+                    for (var i = 0; i < data.length; i += 7) {
+                        var producto = {
+                            "ID": data[i],
+                            "NombreProducto": data[i + 1],
+                            "Descripcion": data[i + 2],
+                            "PrecioVenta": data[i + 3],
+                            "Marca": data[i + 4],
+                            "CantidadInventario": data[i + 5],
+                            "URL": data[i + 6]
+                        };
+                        productos.push(producto);
+                    }
+                    mostrarProductos();
+                },
+                error: function () {
+                    console.log('Error en la solicitud');
+                }
+            });
+        }
+
+        function mostrarProductos() {
+            var contenedor = $('#contenedor');
+            contenedor.empty();
+            var inicio = (paginaActual - 1) * productosPorPagina;
+            var fin = paginaActual * productosPorPagina;
+            var productosMostrados = productos.slice(inicio, fin);
+
+            productosMostrados.forEach(function (producto) {
+                var template = $('#tarjeta-template').contents().clone();
+                template.find('iframe').attr('src', producto.URL);
+                template.find('.id').text(producto.ID);
+                template.find('h2').text(producto.NombreProducto);
+                template.find('.producto-descripcion').text(producto.Descripcion);
+                template.find('.producto-marca').text(producto.Marca);
+                template.find('.producto-precio').text(producto.PrecioVenta);
+                template.find('.producto-disponibles').text(producto.CantidadInventario);
+                contenedor.append(template);
+            });
+        }
+	    $('#pagina-anterior').on('click', function () {
+	        if (paginaActual > 1) {
+	            paginaActual--;
+	            mostrarProductos();
+	        }
+	    });
+
+	    $('#pagina-siguiente').on('click', function () {
+	        if (paginaActual < Math.ceil(productos.length / productosPorPagina)) {
+	            paginaActual++;
+	            mostrarProductos();
+	        }
+	    });
+
+
+        $('#busqueda').on('input', function () {
+            var term = $(this).val().toLowerCase();
+            var productosFiltrados = productos.filter(function (producto) {
+                return producto.NombreProducto.toLowerCase().includes(term);
+            });
+            mostrarProductosFiltrados(productosFiltrados);
+        });
+
+        function mostrarProductosFiltrados(productosFiltrados) {
+            var contenedor = $('#contenedor');
+            contenedor.empty();
+            productosFiltrados.forEach(function (producto) {
+                var template = $('#tarjeta-template').contents().clone();
+                template.find('iframe').attr('src', producto.URL);
+                template.find('.id').text(producto.ID);
+                template.find('h2').text(producto.NombreProducto);
+                template.find('.producto-descripcion').text(producto.Descripcion);
+                template.find('.producto-marca').text(producto.Marca);
+                template.find('.producto-precio').text(producto.PrecioVenta);
+                template.find('.producto-disponibles').text(producto.CantidadInventario);
+                contenedor.append(template);
+            });
+        }
+
+        cargarProductos();
+    });
+</script>
+
 
 		</body>
 </html>

@@ -20,12 +20,10 @@ if (usuario == null) {
 </head>
 <body>
 	<div class="navbar">
-		<a href="Tienda.jsp">Regresar a Tienda</a> <a href="#">Mis pedidos</a>
+		<a href="Tienda.jsp">Regresar a Tienda</a> <a href="MisPedidos.jsp?correo=<%=usuario%>">Mis pedidos</a>
 	</div>
 	<P>En sesion:<%=usuario%></P>
 
-
-	
 
 		<h1>Carrito de Compras</h1>
 		

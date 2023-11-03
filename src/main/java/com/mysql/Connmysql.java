@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
+import com.mysql.cj.xdevapi.Result;
 
 public class Connmysql {
 	private String url = "jdbc:mysql://127.0.0.1:3306/tienda";
@@ -162,8 +163,54 @@ public class Connmysql {
 		cl.execute();
 	}
 	
+	//Lista de pedidos del cliente
+	public ResultSet ListaPedidosCliente(String IDCliente) throws SQLException {
+		String consulta = "select IDPedido , estado, fecha , Total  from pedido where IDCliente = ? ;";
+		PreparedStatement ps = conexion.prepareStatement(consulta);
+		ps.setInt(1, Integer.parseInt(IDCliente));
+		return ps.executeQuery();
+	}
+	
+	//Detalle pedido de cliente
+	public ResultSet DetallePedido (int cliente, int pedido) throws SQLException{
+		String consulta = "select \r\n"
+				+ "p.URL as imagen , p.nombreproducto, \r\n"
+				+ "d.cantidad, d.precio_unitario\r\n"
+				+ "from producto p \r\n"
+				+ "join detallepedido d on p.ID = d.IDProducto\r\n"
+				+ "join pedido p2 on p2.IDPedido = d.IDPedido \r\n"
+				+ "where p2.IDCliente = ? and p2.IDPedido = ? ;";
+		PreparedStatement ps = conexion.prepareStatement(consulta);
+		ps.setInt(1, cliente);
+		ps.setInt(2, pedido);
+		return ps.executeQuery();
+	}
 	
 	
+	// Vista de pedidos del administrador 
+	
+	public ResultSet MisPedidos () throws SQLException {
+		String consuta = "select * from Mispedidos;";
+		PreparedStatement ps = conexion.prepareStatement(consuta);
+		return ps.executeQuery();
+	}
+	
+	//Ver detalle de pedidos del administrador
+	public ResultSet DetalleMisPedidos (String id) throws SQLException {
+		String consulta = "SELECT\r\n"
+				+ "    p.URL as imagen,\r\n"
+				+ "    p.nombreproducto,\r\n"
+				+ "    d.cantidad,\r\n"
+				+ "    d.precio_unitario\r\n"
+				+ "FROM\r\n"
+				+ "    producto p\r\n"
+				+ "JOIN detallepedido d ON p.ID = d.IDProducto\r\n"
+				+ "JOIN pedido p2 ON p2.IDPedido = d.IDPedido\r\n"
+				+ "WHERE p2.IDPedido = ? ; ";
+		PreparedStatement ps = conexion.prepareStatement(consulta);
+		ps.setInt(1, Integer.parseInt(id));
+		return ps.executeQuery();
+	}
 	
 	
 	

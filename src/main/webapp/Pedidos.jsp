@@ -6,7 +6,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Administración de Pedidos</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
     <style>
         /* Estilos generales */
 body {
@@ -101,6 +100,13 @@ button.edit {
 }
 
     </style>
+    
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+
+    
 </head>
 
 <body>
@@ -112,115 +118,99 @@ button.edit {
 
     <div class="order-management">
         <h1>Administración de Pedidos</h1>
-        <div class="filter">
-            <label for="date-filter">Filtrar por Fecha:</label>
-            <input type="date" id="date-filter">
-            <label for "status-filter">Filtrar por Estado:</label>
-            <select id="status-filter">
-                <option value="todos">Todos</option>
-                <option value="activo">Activo</option>
-                <option value="proceso">En Proceso</option>
-                <option value="finalizado">Finalizado</option>
-                <option value="cancelado">Cancelado</option>
-            </select>
-        </div>
+ 
 
-        <table id="order-table">
-            <thead>
-                <tr>
-                    <th>Número de Pedido</th>
-                    <th>Fecha de Pedido</th>
-                    <th>Cliente</th>
-                    <th>Dirección de Envío</th>
-                    <th>Productos</th>
-                    <th>Total</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1001</td>
-                    <td>2023-10-15</td>
-                    <td>Juan Pérez</td>
-                    <td>Calle Principal 123, Ciudad</td>
-                    <td>Producto 1, Producto 2</td>
-                    <td>Q44.98</td>
-                    <td>
-                        <select>
-                            <option value="activo">Activo</option>
-                            <option value="proceso">En Proceso</option>
-                            <option value="finalizado">Finalizado</option>
-                            <option value="cancelado">Cancelado</option>
-                        </select>
-                    </td>
-                    <td><button class="edit">Editar</button></td>
-                </tr>
-                <tr>
-                    <td>1002</td>
-                    <td>2023-10-16</td>
-                    <td>Maria González</td>
-                    <td>Avenida Secundaria 456, Ciudad</td>
-                    <td>Producto 3, Producto 4</td>
-                    <td>Q62.50</td>
-                    <td>
-                        <select>
-                            <option value="activo">Activo</option>
-                            <option value="proceso">En Proceso</option>
-                            <option value="finalizado">Finalizado</option>
-                            <option value="cancelado">Cancelado</option>
-                        </select>
-                    </td>
-                    <td><button class="edit">Editar</button></td>
-                </tr>
-                <tr>
-                    <td>1003</td>
-                    <td>2023-10-17</td>
-                    <td>Laura Smith</td>
-                    <td>Plaza Principal 789, Ciudad</td>
-                    <td>Producto 2, Producto 5</td>
-                    <td>Q38.75</td>
-                    <td>
-                        <select>
-                            <option value="activo">Activo</option>
-                            <option value="proceso">En Proceso</option>
-                            <option value="finalizado">Finalizado</option>
-                            <option value="cancelado">Cancelado</option>
-                        </select>
-                    </td>
-                    <td><button class="edit">Editar</button></td>
-                </tr>
-                <tr>
-                    <td>1004</td>
-                    <td>2023-10-18</td>
-                    <td>Carlos Rodríguez</td>
-                    <td>Avenida Principal 987, Ciudad</td>
-                    <td>Producto 1, Producto 3, Producto 6</td>
-                    <td>Q77.97</td>
-                    <td>
-                        <select>
-                            <option value="activo">Activo</option>
-                            <option value="proceso">En Proceso</option>
-                            <option value="finalizado">Finalizado</option>
-                            <option value="cancelado">Cancelado</option>
-                        </select>
-                    </td>
-                    <td><button class="edit">Editar</button></td>
-                </tr>
-                <!--  -->
-            </tbody>
-        </table>
-    </div>
+ 
 
-    <!-- Agregar la biblioteca DataTables JavaScript -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-    <script>
-        // Inicializar la tabla con DataTables
-        $(document).ready(function() {
-            $('#order-table').DataTable();
+ <table id="pedidos" class="dataTable">
+    <thead>
+        <tr>
+            <th>Número de Pedido</th>
+            <th>Fecha de Pedido</th>
+            <th>Cliente</th>
+            <th>Dirección de Envío</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+            <th>Detalles</th>
+        </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $.ajax({
+            url: 'ADPedidos',
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                var tabla = $('#pedidos').find('tbody');
+                tabla.empty();
+
+                for (var i = 0; i < data.length; i += 7) {
+                    var idPedido = data[i];
+                    var fecha = data[i + 1];
+                    var nombre = data[i + 2];
+                    var apellido = data[i + 3];
+                    var direccion = data[i + 4];
+                    var total = data[i + 5];
+                    var estado = data[i + 6];
+
+                    if (estado == 1) {
+                        estado = 'Solicitado';
+                    }
+
+                    var row = $('<tr>');
+                    row.append($('<td>').text(idPedido));
+                    row.append($('<td>').text(fecha));
+                    row.append($('<td>').text(nombre + " " + apellido));
+                    row.append($('<td>').text(direccion));
+                    row.append($('<td>').text(total));
+                    row.append($('<td>').text(estado));
+
+                    // Agrega una lista desplegable de opciones en lugar del botón "Opciones"
+                    var accionesCell = $('<td>');
+                    var accionesSelect = $('<select>');
+                    accionesSelect.addClass('acciones-select');
+                    accionesSelect.data('id', idPedido); // Almacena el ID del pedido en el select
+
+                    // Agrega opciones al select
+                    var opcionPreparar = $('<option>').val('preparar').text('Preparar');
+                    var opcionCancelar = $('<option>').val('cancelar').text('Cancelar');
+                    var opcionEntregar = $('<option>').val('entregar').text('Entregar');
+
+                    accionesSelect.append(opcionPreparar, opcionCancelar, opcionEntregar);
+                    accionesCell.append(accionesSelect);
+                    row.append(accionesCell);
+
+                    row.append($('<td>').html('<a href="Detalle.jsp?id=' + idPedido + '">Ver Detalles</a>'));
+                    tabla.append(row);
+                }
+
+                $('#pedidos').DataTable({
+                    // Configura las opciones de DataTable, si es necesario
+                });
+
+                // Maneja el cambio en la lista desplegable
+                $('.acciones-select').change(function () {
+                    var idPedido = $(this).data('id');
+                    var opcionSeleccionada = $(this).val();
+                    // Aquí puedes agregar la lógica para manejar la opción seleccionada.
+                    // Puedes usar AJAX para realizar acciones según la opción y actualizar la interfaz de usuario.
+                });
+
+            },
+            error: function () {
+                console.log('Error en la solicitud');
+            }
         });
-    </script>
+    });
+</script>
+
 </body>
 
 </html>
