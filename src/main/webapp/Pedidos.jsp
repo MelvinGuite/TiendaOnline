@@ -213,9 +213,10 @@ $(document).ready(function () {
                         opcion: opcionSeleccionada
                     },
                     success: function (response) {
-                        // Maneja la respuesta del servlet si es necesario
                         console.log('Solicitud exitosa');
                         console.log(response);
+                        alert('Cambio exitoso');
+
                     },
                     error: function () {
                         console.log('Error en la solicitud');
