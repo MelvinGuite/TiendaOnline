@@ -141,74 +141,94 @@ button.edit {
 </table>
 
 <script type="text/javascript">
-    $(document).ready(function () {
+$(document).ready(function () {
 
-        $.ajax({
-            url: 'ADPedidos',
-            type: 'get',
-            dataType: 'json',
-            success: function (data) {
-                var tabla = $('#pedidos').find('tbody');
-                tabla.empty();
+    $.ajax({
+        url: 'ADPedidos',
+        type: 'get',
+        dataType: 'json',
+        success: function (data) {
+            var tabla = $('#pedidos').find('tbody');
+            tabla.empty();
 
-                for (var i = 0; i < data.length; i += 7) {
-                    var idPedido = data[i];
-                    var fecha = data[i + 1];
-                    var nombre = data[i + 2];
-                    var apellido = data[i + 3];
-                    var direccion = data[i + 4];
-                    var total = data[i + 5];
-                    var estado = data[i + 6];
+            for (var i = 0; i < data.length; i += 7) {
+                var idPedido = data[i];
+                var fecha = data[i + 1];
+                var nombre = data[i + 2];
+                var apellido = data[i + 3];
+                var direccion = data[i + 4];
+                var total = data[i + 5];
+                var estado = data[i + 6];
 
-                    if (estado == 1) {
-                        estado = 'Solicitado';
-                    }
-
-                    var row = $('<tr>');
-                    row.append($('<td>').text(idPedido));
-                    row.append($('<td>').text(fecha));
-                    row.append($('<td>').text(nombre + " " + apellido));
-                    row.append($('<td>').text(direccion));
-                    row.append($('<td>').text(total));
-                    row.append($('<td>').text(estado));
-
-                    // Agrega una lista desplegable de opciones en lugar del botón "Opciones"
-                    var accionesCell = $('<td>');
-                    var accionesSelect = $('<select>');
-                    accionesSelect.addClass('acciones-select');
-                    accionesSelect.data('id', idPedido); // Almacena el ID del pedido en el select
-
-                    // Agrega opciones al select
-                    var opcionPreparar = $('<option>').val('preparar').text('Preparar');
-                    var opcionCancelar = $('<option>').val('cancelar').text('Cancelar');
-                    var opcionEntregar = $('<option>').val('entregar').text('Entregar');
-
-                    accionesSelect.append(opcionPreparar, opcionCancelar, opcionEntregar);
-                    accionesCell.append(accionesSelect);
-                    row.append(accionesCell);
-
-                    row.append($('<td>').html('<a href="Detalle.jsp?id=' + idPedido + '">Ver Detalles</a>'));
-                    tabla.append(row);
+                if (estado == 1) {
+                    estado = 'Solicitado';
+                } else if (estado == 0 ) {
+                	estado = 'Aprobado' ;
+                } else if (estado == 2 ) {
+                	estado = 'Cancelado' ;
                 }
 
-                $('#pedidos').DataTable({
-                    // Configura las opciones de DataTable, si es necesario
-                });
+                var row = $('<tr>');
+                row.append($('<td>').text(idPedido));
+                row.append($('<td>').text(fecha));
+                row.append($('<td>').text(nombre + " " + apellido));
+                row.append($('<td>').text(direccion));
+                row.append($('<td>').text(total));
+                row.append($('<td>').text(estado));
 
-                // Maneja el cambio en la lista desplegable
-                $('.acciones-select').change(function () {
-                    var idPedido = $(this).data('id');
-                    var opcionSeleccionada = $(this).val();
-                    // Aquí puedes agregar la lógica para manejar la opción seleccionada.
-                    // Puedes usar AJAX para realizar acciones según la opción y actualizar la interfaz de usuario.
-                });
+                // Agrega una lista desplegable de opciones en lugar del botón "Opciones"
+                var accionesCell = $('<td>');
+                var accionesSelect = $('<select>');
+                accionesSelect.addClass('acciones-select');
+                accionesSelect.data('id', idPedido); // Almacena el ID del pedido en el select
 
-            },
-            error: function () {
-                console.log('Error en la solicitud');
+                // Agrega opciones al select
+                var opcionPreparar = $('<option>').val('preparar').text('Preparar');
+                var opcionCancelar = $('<option>').val('cancelar').text('Cancelar');
+                var opcionEntregar = $('<option>').val('entregar').text('Entregar');
+
+                accionesSelect.append(opcionPreparar, opcionCancelar, opcionEntregar);
+                accionesCell.append(accionesSelect);
+                row.append(accionesCell);
+
+                row.append($('<td>').html('<a href="Detalle.jsp?id=' + idPedido + '">Ver Detalles</a>'));
+                tabla.append(row);
             }
-        });
+
+            $('#pedidos').DataTable({
+                // Configura las opciones de DataTable, si es necesario
+            });
+
+            // Maneja el cambio en la lista desplegable
+            $('.acciones-select').change(function () {
+                var idPedido = $(this).data('id');
+                var opcionSeleccionada = $(this).val();
+
+                // Envía la opción seleccionada al servlet usando una solicitud AJAX
+                $.ajax({
+                    url: 'AccionPedido', // Reemplaza 'TUSERVLET' con la URL de tu servlet
+                    type: 'GET', // O el método HTTP que tu servlet espera
+                    data: {
+                        idPedido: idPedido,
+                        opcion: opcionSeleccionada
+                    },
+                    success: function (response) {
+                        // Maneja la respuesta del servlet si es necesario
+                        console.log('Solicitud exitosa');
+                        console.log(response);
+                    },
+                    error: function () {
+                        console.log('Error en la solicitud');
+                    }
+                });
+            });
+        },
+        error: function () {
+            console.log('Error en la solicitud');
+        }
     });
+});
+
 </script>
 
 </body>

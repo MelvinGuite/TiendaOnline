@@ -211,7 +211,12 @@ public class Connmysql {
 		ps.setInt(1, Integer.parseInt(id));
 		return ps.executeQuery();
 	}
-	
+	// Aprobar pedido
+	public void AprobarPedido(String idpedido) throws SQLException {
+		CallableStatement cl = conexion.prepareCall(" { call ConfirmaEntrega (?) } ") ;
+		cl.setInt(1, Integer.parseInt(idpedido));
+		cl.execute();
+	}
 	
 	
 	

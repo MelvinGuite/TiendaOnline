@@ -95,6 +95,10 @@ if (usuario == null) {
 
                     if (estado == 1) {
                         estado = 'Solicitado';
+                    } else if (estado == 0 ) {
+                    	estado = 'Aprobado';
+                    } else if (estado == 2 ) {
+                    	estado = 'Cancelado';
                     }
 
                     var row = $('<tr>');
